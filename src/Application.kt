@@ -27,8 +27,15 @@ fun Application.module(testing: Boolean = false) {
     install(Authentication) {
         basic("myBasicAuth") {
             realm = "Ktor Server"
-            validate { if (it.name == "test" && it.password == "password") UserIdPrincipal(it.name) else null }
-            validate { if (it.name == "salox" && it.password == "redhat") UserIdPrincipal(it.name) else null }
+            validate {
+                if (
+                    when {
+                        it.name == "test" && it.password == "password" -> true
+                        it.name == "salox" && it.password == "redhat" -> true
+                        else -> false
+                    }
+                ) UserIdPrincipal(it.name) else null
+            }
         }
     }
 
