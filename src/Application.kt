@@ -28,6 +28,7 @@ fun Application.module(testing: Boolean = false) {
         basic("myBasicAuth") {
             realm = "Ktor Server"
             validate { if (it.name == "test" && it.password == "password") UserIdPrincipal(it.name) else null }
+            validate { if (it.name == "salox" && it.password == "redhat") UserIdPrincipal(it.name) else null }
         }
     }
 
