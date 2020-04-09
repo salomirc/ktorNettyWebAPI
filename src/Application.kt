@@ -1,9 +1,6 @@
 package com.belsoft
 
-import com.belsoft.routes.authenticate
-import com.belsoft.routes.json
-import com.belsoft.routes.root
-import com.belsoft.routes.rootPost
+import com.belsoft.routes.*
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*
@@ -23,7 +20,11 @@ fun Application.module(testing: Boolean = false) {
     install(DefaultHeaders) {
         header("X-Engine", "Ktor") // will send this header with each response
     }
-
+    install(StatusPages) {
+        exception<Throwable> { e ->
+            call.respondText(e.localizedMessage, ContentType.Text.Plain, HttpStatusCode.InternalServerError)
+        }
+    }
     install(Authentication) {
         basic("myBasicAuth") {
             realm = "Ktor Server"
@@ -38,7 +39,6 @@ fun Application.module(testing: Boolean = false) {
             }
         }
     }
-
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
@@ -55,6 +55,7 @@ fun Application.module(testing: Boolean = false) {
         rootPost()
         json()
         authenticate()
+        crashServer()
     }
 }
 
